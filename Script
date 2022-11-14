@@ -1,0 +1,493 @@
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+
+
+
+local Window = Rayfield:CreateWindow({
+	Name = "Angel",
+	LoadingTitle = "Game: Da Hood",
+	LoadingSubtitle = "by OsGavin",
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = nil,
+		FileName = "Big Hub"
+	},
+	Discord = {
+		Enabled = false,
+		Invite = "osw",
+		RememberJoins = true
+	},
+	KeySystem = true,
+	KeySettings = {
+		Title = "Angel",
+		Subtitle = "Key System",
+		Note = "OsGavin#0001 made this",
+		FileName = "KeySystem",
+		SaveKey = true,
+		GrabKeyFromSite = false,
+		Key = "OSW"
+	}
+})
+
+Rayfield:Notify({
+	Title = "Welcome To Angel",
+	Content = "Script Will Execute In 5 Seconds",
+	Duration = 3,
+	Image = 4483362458,
+	Actions = { -- Notification Buttons
+		Ignore = {
+			Name = "Okay!",
+			Callback = function()
+				print("The user tapped Okay!")
+			end
+		},
+	},
+})
+
+wait(2)
+local Tab = Window:CreateTab("Main", 4483362458)
+local Section = Tab:CreateSection("Scripts")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Button = Tab:CreateButton({
+	Name = "Fly",
+	Callback = function()
+		local flight
+		local plr = game.Players.LocalPlayer
+		IYMouse = plr:GetMouse()
+		IYMouse.KeyDown:connect(function(key)
+			if key == "x" then
+				if flight then
+					flight = false
+					fly()
+				else
+					flight = true
+					NOFLY()
+				end
+			end
+		end)
+
+		for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+			if v:IsA("BasePart") and v.CanCollide == true then
+				v.CanCollide = false
+			end
+		end
+
+		FLYING = false
+		QEfly = true
+		iyflyspeed = 3
+		vehicleflyspeed = 3
+		function sFLY(vfly)
+			repeat wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('Humanoid')
+			repeat wait() until IYMouse
+
+			local T = game.Players.LocalPlayer.Character.LowerTorso
+			local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+			local lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+			local SPEED = 5
+
+			local function FLY()
+				FLYING = true
+				local BG = Instance.new('BodyGyro', T)
+				local BV = Instance.new('BodyVelocity', T)
+				BG.P = 9e4
+				BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+				BG.cframe = T.CFrame
+				BV.velocity = Vector3.new(0, 0, 0)
+				BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+				spawn(function()
+					repeat wait()
+						if not vfly and game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+							game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = true
+						end
+						if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0 then
+							SPEED = 50
+						elseif not (CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0) and SPEED ~= 0 then
+							SPEED = 0
+						end
+						if (CONTROL.L + CONTROL.R) ~= 0 or (CONTROL.F + CONTROL.B) ~= 0 or (CONTROL.Q + CONTROL.E) ~= 0 then
+							BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+							lCONTROL = {F = CONTROL.F, B = CONTROL.B, L = CONTROL.L, R = CONTROL.R}
+						elseif (CONTROL.L + CONTROL.R) == 0 and (CONTROL.F + CONTROL.B) == 0 and (CONTROL.Q + CONTROL.E) == 0 and SPEED ~= 0 then
+							BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lCONTROL.F + lCONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lCONTROL.L + lCONTROL.R, (lCONTROL.F + lCONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+						else
+							BV.velocity = Vector3.new(0, 0, 0)
+						end
+						BG.cframe = workspace.CurrentCamera.CoordinateFrame
+					until not FLYING
+					CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+					lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+					SPEED = 0
+					BG:destroy()
+					BV:destroy()
+					if game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+						game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+					end
+				end)
+			end
+			IYMouse.KeyDown:connect(function(KEY)
+				if KEY:lower() == 'w' then
+					if vfly then
+						CONTROL.F = vehicleflyspeed
+					else
+						CONTROL.F = iyflyspeed
+					end
+				elseif KEY:lower() == 's' then
+					if vfly then
+						CONTROL.B = - vehicleflyspeed
+					else
+						CONTROL.B = - iyflyspeed
+					end
+				elseif KEY:lower() == 'a' then
+					if vfly then
+						CONTROL.L = - vehicleflyspeed
+					else
+						CONTROL.L = - iyflyspeed
+					end
+				elseif KEY:lower() == 'd' then 
+					if vfly then
+						CONTROL.R = vehicleflyspeed
+					else
+						CONTROL.R = iyflyspeed
+					end
+				elseif QEfly and KEY:lower() == 'e' then
+					if vfly then
+						CONTROL.Q = vehicleflyspeed*2
+					else
+						CONTROL.Q = iyflyspeed*2
+					end
+				elseif QEfly and KEY:lower() == 'q' then
+					if vfly then
+						CONTROL.E = -vehicleflyspeed*2
+					else
+						CONTROL.E = -iyflyspeed*2
+					end
+				end
+			end)
+			IYMouse.KeyUp:connect(function(KEY)
+				if KEY:lower() == 'w' then
+					CONTROL.F = 0
+				elseif KEY:lower() == 's' then
+					CONTROL.B = 0
+				elseif KEY:lower() == 'a' then
+					CONTROL.L = 0
+				elseif KEY:lower() == 'd' then
+					CONTROL.R = 0
+				elseif KEY:lower() == 'e' then
+					CONTROL.Q = 0
+				elseif KEY:lower() == 'q' then
+					CONTROL.E = 0
+				end
+			end)
+			FLY()
+		end
+
+		function NOFLY()
+			FLYING = false
+			game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+		end
+
+		function fly()
+			NOFLY()
+			wait()
+			sFLY()
+		end
+	end,
+})
+
+local Button = Tab:CreateButton({
+	Name = "Fist Reach",
+	Callback = function()
+		for i,v in ipairs(game.workspace:GetDescendants()) do
+			if v:IsA("Seat") then 
+				v:Destroy()
+			end
+		end
+		if player.Character:FindFirstChildWhichIsA('Tool') then
+			player.Character:FindFirstChildWhichIsA('Tool').Handle.Size = Vector3.new(50,50,50)
+			player.Character:FindFirstChildWhichIsA('Tool').Handle.Transparency = 1
+		end
+		for i,v in pairs(game:GetService('Players'):GetChildren()) do
+			if (v.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.LeftHand.Position).Magnitude <= 50 then
+				if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") then
+					if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool"):FindFirstChild('Handle') then
+						firetouchinterest(game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Handle, v.Character)
+					end
+				end
+			end
+		end	
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "Melee Reach",
+	Callback = function()
+		for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+			if v:IsA("Tool") then
+				spawn(function()
+					pcall(function()
+						local Instance = Instance.new("SelectionBox", v.Handle)
+						Instance.Adornee = v.Handle
+						Instance.Color3 = Color3.new(255, 255, 255)
+						v.Handle.Transparency = 1
+						v.Handle.Size = Vector3.new(40, 40, 40)
+
+						while wait() do
+							v.GripForward = Vector3.new(math.random(-1000, 1000), math.random(-1000, 1000), math.random(-1000, 1000))
+							v.GripRight = Vector3.new(math.random(-1000, 1000), math.random(-1000, 1000), math.random(-1000, 1000))
+						end
+					end)
+				end)
+			end
+		end
+	end,
+})
+
+local Tab = Window:CreateTab("Lock", 4483362458)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Tab = Window:CreateTab("Misc", 4483362458)
+
+
+local Button = Tab:CreateButton({
+	Name = "Cframe (C)",
+	Callback = function()
+		repeat
+			wait()
+		until game:IsLoaded()
+		local L_134_ = game:service('Players')
+		local L_135_ = L_134_.LocalPlayer
+		repeat
+			wait()
+		until L_135_.Character
+		local L_136_ = game:service('UserInputService')
+		local L_137_ = game:service('RunService')
+		getgenv().Multiplier = 0.5
+		local L_138_ = true
+		local L_139_
+		L_136_.InputBegan:connect(function(L_140_arg0)
+			if L_140_arg0.KeyCode == Enum.KeyCode.LeftBracket then
+				Multiplier = Multiplier + 0.01
+				print(Multiplier)
+				wait(0.2)
+				while L_136_:IsKeyDown(Enum.KeyCode.LeftBracket) do
+					wait()
+					Multiplier = Multiplier + 0.01
+					print(Multiplier)
+				end
+			end
+			if L_140_arg0.KeyCode == Enum.KeyCode.RightBracket then
+				Multiplier = Multiplier - 0.01
+				print(Multiplier)
+				wait(0.2)
+				while L_136_:IsKeyDown(Enum.KeyCode.RightBracket) do
+					wait()
+					Multiplier = Multiplier - 0.01
+					print(Multiplier)
+				end
+			end
+			if L_140_arg0.KeyCode == Enum.KeyCode.C then
+				L_138_ = not L_138_
+				if L_138_ == true then
+					repeat
+						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.Humanoid.MoveDirection * Multiplier
+						game:GetService("RunService").Stepped:wait()
+					until L_138_ == false
+				end
+			end
+		end)	
+	end,
+})
+	
+
+local Slider = Tab:CreateSlider({
+	Name = "CFrame Speed",
+	Range = {0, 5},
+	Increment = 0.5,
+	Suffix = "Speed",
+	CurrentValue = 0,
+	Flag = "Cframe Speed", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(s)
+		getgenv().Multiplier = s
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "Cframe Gun Fix",
+	Callback = function()
+		for _, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+			if v:IsA("Script") and v.Name ~= "Health" and v.Name ~= "Sound" and v:FindFirstChild("LocalScript") then
+				v:Destroy()
+			end
+		end
+		game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+			repeat
+				wait()
+			until game.Players.LocalPlayer.Character
+			char.ChildAdded:Connect(function(child)
+				if child:IsA("Script") then 
+					wait(0.1)
+					if child:FindFirstChild("LocalScript") then
+						child.LocalScript:FireServer()
+					end
+				end
+			end)
+		end)
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "AntiBan",
+	Callback = function()
+		local bitch = {
+			163721789,
+			15427717,
+			201454243,
+			822999,
+			63794379,
+			17260230,
+			28357488,
+			93101606,
+			8195210,
+			89473551,
+			16917269,
+			85989579,
+			1553950697,
+			476537893,
+			155627580,
+			31163456,
+			7200829,
+			25717070,
+			201454243,
+			15427717,
+			63794379,
+			16138978,
+			60660789,
+			17260230,
+			16138978,
+			1161411094,
+			9125623,
+			11319153,
+			34758833,
+			194109750,
+			35616559,
+			1257271138,
+			28885841,
+			23558830,
+			25717070,
+
+
+		}
+
+		for l, c in pairs(game.Players:GetChildren()) do
+			for i, v in pairs(bitch) do
+				if c.UserId == v then
+					local Vanis = game.Players.LocalPlayer
+					Vanis:Kick("Hoe Detected")
+				end
+			end
+		end
+		game.Players.PlayerAdded:Connect(function(plr)
+			for i, v in pairs(bitch) do
+				if plr.UserId == v then
+					local Vanis = game.Players.LocalPlayer
+					Vanis:Kick("Hoe Detected")
+				end
+			end
+		end)
+	end,
+})
+
+
+
+
+
+
+
+local Tab = Window:CreateTab("Teleports", 4483362458)
+
+local Button = Tab:CreateButton({
+	Name = "Main",
+	Callback = function()
+		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-485.668, 23.631, -285.169);
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "DownHill Shop",
+	Callback = function()
+		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-582, 7.172, -739.015);
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "UpHill Shop",
+	Callback = function()
+		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(475.022, 48.005, -603.737);
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "DownHill Food",
+	Callback = function()
+		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-333.492065, 23.6826477, -292.959625)
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "UpHill Food",
+	Callback = function()
+		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(301.780121, 49.2826538, -619.999634)
+	end,
+})
+
+
+local Tab = Window:CreateTab("Settings", 4483362458)
+
+local Label = Tab:CreateLabel("Credits To Gavin")
+local Label = Tab:CreateLabel("discord.gg/osw")
+
+
+
+local Button = Tab:CreateButton({
+	Name = "Destroy UI",
+	Callback = function()
+		Rayfield:Destroy()
+	end,
+})
