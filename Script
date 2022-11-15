@@ -1,3 +1,4 @@
+getgenv().SecureMode = true
 local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
 
 
@@ -218,30 +219,8 @@ local Button = Tab:CreateButton({
 		end
 	end,
 })
+		
 
-local Button = Tab:CreateButton({
-	Name = "Fist Reach",
-	Callback = function()
-		for i,v in ipairs(game.workspace:GetDescendants()) do
-			if v:IsA("Seat") then 
-				v:Destroy()
-			end
-		end
-		if player.Character:FindFirstChildWhichIsA('Tool') then
-			player.Character:FindFirstChildWhichIsA('Tool').Handle.Size = Vector3.new(50,50,50)
-			player.Character:FindFirstChildWhichIsA('Tool').Handle.Transparency = 1
-		end
-		for i,v in pairs(game:GetService('Players'):GetChildren()) do
-			if (v.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.LeftHand.Position).Magnitude <= 50 then
-				if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") then
-					if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool"):FindFirstChild('Handle') then
-						firetouchinterest(game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Handle, v.Character)
-					end
-				end
-			end
-		end	
-	end,
-})
 local Button = Tab:CreateButton({
 	Name = "Melee Reach",
 	Callback = function()
@@ -267,23 +246,222 @@ local Button = Tab:CreateButton({
 })
 
 local Tab = Window:CreateTab("Lock", 4483362458)
+local Section = Tab:CreateSection("Aimlock")
 
 
+local Button = Tab:CreateButton({
+	Name = "Aimlock",
+	Callback = function()
+		getgenv().AimPart = "HumanoidRootPart"
+		getgenv().AimlockKey = "q"
+		getgenv().AimRadius = 30
+		getgenv().ThirdPerson = true
+		getgenv().FirstPerson = true
+		getgenv().TeamCheck = false
+		getgenv().PredictMovement = true
+		getgenv().PredictionVelocity = 9
+		local L_27_, L_28_, L_29_, L_30_ =
+			game:GetService "Players",
+		game:GetService "UserInputService",
+		game:GetService "RunService",
+		game:GetService "StarterGui"
+		local L_31_, L_32_, L_33_, L_34_, L_35_, L_36_, L_37_ =
+			L_27_.LocalPlayer,
+		L_27_.LocalPlayer:GetMouse(),
+		workspace.CurrentCamera,
+		CFrame.new,
+		Ray.new,
+		Vector3.new,
+		Vector2.new
+		local L_38_, L_39_, L_40_ = true, false, false
+		local L_41_
+		getgenv().CiazwareUniversalAimbotLoaded = true
+		getgenv().WorldToViewportPoint = function(L_42_arg0)
+			return L_33_:WorldToViewportPoint(L_42_arg0)
+		end
+		getgenv().WorldToScreenPoint = function(L_43_arg0)
+			return L_33_.WorldToScreenPoint(L_33_, L_43_arg0)
+		end
+		getgenv().GetObscuringObjects = function(L_44_arg0)
+			if L_44_arg0 and L_44_arg0:FindFirstChild(getgenv().AimPart) and L_31_ and L_31_.Character:FindFirstChild("Head") then
+				local L_45_ = workspace:FindPartOnRay(L_35_(L_44_arg0[getgenv().AimPart].Position, L_31_.Character.Head.Position))
+				if L_45_ then
+					return L_45_:IsDescendantOf(L_44_arg0)
+				end
+			end
+		end
+		getgenv().GetNearestTarget = function()
+			local L_46_ = {}
+			local L_47_ = {}
+			local L_48_ = {}
+			for L_50_forvar0, L_51_forvar1 in pairs(L_27_:GetPlayers()) do
+				if L_51_forvar1 ~= L_31_ then
+					table.insert(L_46_, L_51_forvar1)
+				end
+			end
+			for L_52_forvar0, L_53_forvar1 in pairs(L_46_) do
+				if L_53_forvar1.Character ~= nil then
+					local L_54_ = L_53_forvar1.Character:FindFirstChild("Head")
+					if getgenv().TeamCheck == true and L_53_forvar1.Team ~= L_31_.Team then
+						local L_55_ =
+							(L_53_forvar1.Character:FindFirstChild("Head").Position - game.Workspace.CurrentCamera.CFrame.p).magnitude
+						local L_56_ =
+							Ray.new(
+								game.Workspace.CurrentCamera.CFrame.p,
+								(L_32_.Hit.p - game.Workspace.CurrentCamera.CFrame.p).unit * L_55_
+							)
+						local L_57_, L_58_ = game.Workspace:FindPartOnRay(L_56_, game.Workspace)
+						local L_59_ = math.floor((L_58_ - L_54_.Position).magnitude)
+						L_47_[L_53_forvar1.Name .. L_52_forvar0] = {}
+						L_47_[L_53_forvar1.Name .. L_52_forvar0].dist = L_55_
+						L_47_[L_53_forvar1.Name .. L_52_forvar0].plr = L_53_forvar1
+						L_47_[L_53_forvar1.Name .. L_52_forvar0].diff = L_59_
+						table.insert(L_48_, L_59_)
+					elseif getgenv().TeamCheck == false and L_53_forvar1.Team == L_31_.Team then
+						local L_60_ =
+							(L_53_forvar1.Character:FindFirstChild("Head").Position - game.Workspace.CurrentCamera.CFrame.p).magnitude
+						local L_61_ =
+							Ray.new(
+								game.Workspace.CurrentCamera.CFrame.p,
+								(L_32_.Hit.p - game.Workspace.CurrentCamera.CFrame.p).unit * L_60_
+							)
+						local L_62_, L_63_ = game.Workspace:FindPartOnRay(L_61_, game.Workspace)
+						local L_64_ = math.floor((L_63_ - L_54_.Position).magnitude)
+						L_47_[L_53_forvar1.Name .. L_52_forvar0] = {}
+						L_47_[L_53_forvar1.Name .. L_52_forvar0].dist = L_60_
+						L_47_[L_53_forvar1.Name .. L_52_forvar0].plr = L_53_forvar1
+						L_47_[L_53_forvar1.Name .. L_52_forvar0].diff = L_64_
+						table.insert(L_48_, L_64_)
+					end
+				end
+			end
+			if unpack(L_48_) == nil then
+				return nil
+			end
+			local L_49_ = math.floor(math.min(unpack(L_48_)))
+			if L_49_ > getgenv().AimRadius then
+				return nil
+			end
+			for L_65_forvar0, L_66_forvar1 in pairs(L_47_) do
+				if L_66_forvar1.diff == L_49_ then
+					return L_66_forvar1.plr
+				end
+			end
+			return nil
+		end
+		L_32_.KeyDown:Connect(
+			function(L_67_arg0)
+				if L_67_arg0 == AimlockKey and L_41_ == nil then
+					pcall(
+						function()
+							if L_39_ ~= true then
+								L_39_ = true
+							end
+							local L_68_
+							L_68_ = GetNearestTarget()
+							if L_68_ ~= nil then
+								L_41_ = L_68_
+							end
+						end
+					)
+				elseif L_67_arg0 == AimlockKey and L_41_ ~= nil then
+					if L_41_ ~= nil then
+						L_41_ = nil
+					end
+					if L_39_ ~= false then
+						L_39_ = false
+					end
+				end
+			end
+		)
+		L_29_.RenderStepped:Connect(
+			function()
+				if getgenv().ThirdPerson == true and getgenv().FirstPerson == true then
+					if
+						(L_33_.Focus.p - L_33_.CoordinateFrame.p).Magnitude > 1 or
+						(L_33_.Focus.p - L_33_.CoordinateFrame.p).Magnitude <= 1
+					then
+						L_40_ = true
+					else
+						L_40_ = false
+					end
+				elseif getgenv().ThirdPerson == true and getgenv().FirstPerson == false then
+					if (L_33_.Focus.p - L_33_.CoordinateFrame.p).Magnitude > 1 then
+						L_40_ = true
+					else
+						L_40_ = false
+					end
+				elseif getgenv().ThirdPerson == false and getgenv().FirstPerson == true then
+					if (L_33_.Focus.p - L_33_.CoordinateFrame.p).Magnitude <= 1 then
+						L_40_ = true
+					else
+						L_40_ = false
+					end
+				end
+				if L_38_ == true and L_39_ == true then
+					if L_41_ and L_41_.Character and L_41_.Character:FindFirstChild(getgenv().AimPart) then
+						if getgenv().FirstPerson == true then
+							if L_40_ == true then
+								if getgenv().PredictMovement == true then
+									L_33_.CFrame =
+										L_34_(
+											L_33_.CFrame.p,
+											L_41_.Character[getgenv().AimPart].Position +
+											L_41_.Character[getgenv().AimPart].Velocity / PredictionVelocity
+										)
+								elseif getgenv().PredictMovement == false then
+									L_33_.CFrame = L_34_(L_33_.CFrame.p, L_41_.Character[getgenv().AimPart].Position)
+								end
+							end
+						elseif getgenv().ThirdPerson == true then
+							if L_40_ == true then
+								if getgenv().PredictMovement == true then
+									L_33_.CFrame =
+										L_34_(
+											L_33_.CFrame.p,
+											L_41_.Character[getgenv().AimPart].Position +
+											L_41_.Character[getgenv().AimPart].Velocity / PredictionVelocity
+										)
+								elseif getgenv().PredictMovement == false then
+									L_33_.CFrame = L_34_(L_33_.CFrame.p, L_41_.Character[getgenv().AimPart].Position)
+								end
+							end
+						end
+					end
+				end
+	end)
+end
+})
 
 
+local Input = Tab:CreateInput({
+	Name = "Aimlock Keybind",
+	PlaceholderText = "Key",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(L_69_arg0)
+		getgenv().AimlockKey = L_69_arg0
+	end,
+})
 
 
+local Input = Tab:CreateInput({
+	Name = "Aimlock Prediction",
+	PlaceholderText = "Prediction",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(L_70_arg0)
+		PredictionVelocity = L_70_arg0
+	end,
+})
 
-
-
-
-
-
-
-
-
-
-
+local Dropdown = Tab:CreateDropdown({
+	Name = "Aimpart",
+	Options = {"LowerTorso","HumanoidRootPart", "UpperTorso", "Head"},
+	CurrentOption = "HumanoidRootPart",
+	Flag = "Aimpart", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(L_71_arg0)
+		getgenv().AimPart = L_71_arg0
+	end,
+})
 
 
 
@@ -340,7 +518,6 @@ local Button = Tab:CreateButton({
 		end)	
 	end,
 })
-	
 
 local Slider = Tab:CreateSlider({
 	Name = "CFrame Speed",
@@ -439,15 +616,54 @@ local Button = Tab:CreateButton({
 })
 
 
+local Button = Tab:CreateButton({
+	Name = "Korblox",
+	Callback = function()
+		local ply = game.Players.LocalPlayer
+		local chr = ply.Character
+		chr.RightLowerLeg.MeshId = "902942093"
+		chr.RightLowerLeg.Transparency = "1"
+		chr.RightUpperLeg.MeshId = "http://www.roblox.com/asset/?id=902942096"
+		chr.RightUpperLeg.TextureID = "http://roblox.com/asset/?id=902843398"
+		chr.RightFoot.MeshId = "902942089"
+		chr.RightFoot.Transparency = "1"
+		end
+})
+local Button = Tab:CreateButton({
+	Name = "Headless",
+	Callback = function()
+		game.Players.LocalPlayer.Character.Head.Transparency = 1
+		game.Players.LocalPlayer.Character.Head.Transparency = 1
+		for i,v in pairs(game.Players.LocalPlayer.Character.Head:GetChildren()) do
+			if (v:IsA("Decal")) then
+				v.Transparency = 1
+			end
+		end
+	end,
+})
 
+local Button = Tab:CreateButton({
+	Name = "Anti Lock",
+	Callback = function()
+		getgenv().Sky = true 
+		getgenv().SkyAmount = 90
 
-
+		game:GetService("RunService").heartbeat:Connect(function()
+			if getgenv().Sky ~= false then 
+				local vel = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,      getgenv().SkyAmount,0) 
+				game:GetService("RunService").RenderStepped:Wait()
+				game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = vel
+			end 
+		end)
+	end,
+})
 
 
 local Tab = Window:CreateTab("Teleports", 4483362458)
 
 local Button = Tab:CreateButton({
-	Name = "Main",
+	Name = "Bank",
 	Callback = function()
 		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-485.668, 23.631, -285.169);
 	end,
@@ -476,7 +692,42 @@ local Button = Tab:CreateButton({
 		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(301.780121, 49.2826538, -619.999634)
 	end,
 })
-
+local Button = Tab:CreateButton({
+	Name = "School",
+	Callback = function()
+		game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-531.957458, 21.7499981, 232.015396)
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "SkatePark",
+	Callback = function()
+		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-908.901, 21.999, -500.778)
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "Jail",
+	Callback = function()
+		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-294.162, 22.644, -111.716)
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "Admin Base",
+	Callback = function()
+		game:GetService'Players'.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-797.64001464844, -39.649200439453, -886.68939208984)
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "Boxing Club",
+	Callback = function()
+		game:GetService'Players'.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-234.94459533691, 22.05902671814, -1119.3583984375)
+	end,
+})
+local Button = Tab:CreateButton({
+	Name = "Phone",
+	Callback = function()
+		game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-120.121, 22.946, -870.425)
+	end,
+})
 
 local Tab = Window:CreateTab("Settings", 4483362458)
 
@@ -491,3 +742,49 @@ local Button = Tab:CreateButton({
 		Rayfield:Destroy()
 	end,
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local L_18_ = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
